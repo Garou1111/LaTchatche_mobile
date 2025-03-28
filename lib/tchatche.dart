@@ -9,16 +9,31 @@ class Tchatche extends StatefulWidget {
   State<Tchatche> createState() => _TchatcheState();
 }
 
-class _TchatcheState extends State<Tchatche> {
-  int currentPageIndex = 0;
+class Page {
+  final String title;
+  final Icon icon;
+  final Widget widget;
 
-  static const List<Widget> pages = <Widget>[Discussions(), PublicChannels()];
+  Page({required this.title, required this.icon, required this.widget});
+}
+
+class _TchatcheState extends State<Tchatche> {
+  int currentPageIndex = 1;
+
+  static List<Page> pages = <Page>[
+    Page(icon: Icon(Icons.tag), title: 'Discussions', widget: Discussions()),
+    Page(
+      icon: Icon(Icons.public),
+      title: 'Salons publics',
+      widget: PublicChannels(),
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Discussions'),
+        title: Text(pages.elementAt(currentPageIndex).title),
         actions: <Widget>[
           IconButton(
             onPressed: () {},
@@ -39,15 +54,12 @@ class _TchatcheState extends State<Tchatche> {
           });
         },
         selectedIndex: currentPageIndex,
-        destinations: const <Widget>[
-          NavigationDestination(icon: Icon(Icons.tag), label: 'Discussions'),
-          NavigationDestination(
-            icon: Icon(Icons.public),
-            label: 'Salons publics',
-          ),
-        ],
+        destinations:
+            pages.map((Page page) {
+              return NavigationDestination(icon: page.icon, label: page.title);
+            }).toList(),
       ),
-      body: pages.elementAt(currentPageIndex),
+      body: pages.elementAt(currentPageIndex).widget,
     );
   }
 }
