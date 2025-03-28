@@ -1,6 +1,6 @@
-name: projet_flutter_411
-description: "Meilleur application en Flutter de France"
-publish_to: 'none'
+name: latchatche_mobile
+description: "Client mobile pour La Tchatche, une application de messagerie instantanée."
+publish_to: "none"
 version: 0.1.0
 
 environment:
@@ -9,6 +9,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_dotenv: ^5.2.1
+  http: ^1.3.0
 
 dev_dependencies:
   flutter_test:
@@ -17,3 +19,5 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - .env

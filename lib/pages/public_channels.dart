@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:projet_flutter_411/models/channel.dart';
+import 'package:latchatche_mobile/models/channel.dart';
 
 class PublicChannels extends StatefulWidget {
   const PublicChannels({super.key});
@@ -9,24 +9,37 @@ class PublicChannels extends StatefulWidget {
 }
 
 class _PublicChannels extends State<PublicChannels> {
-  static List<Channel> channels = [
-    Channel(name: 'gheb', messages: 58),
-    Channel(name: 'memes', messages: 24),
-    Channel(name: 'thing', messages: 32),
-    Channel(name: 'adam', messages: 69),
-  ];
+  late Future<List<Channel>> channels;
+
+  @override
+  void initState() {
+    super.initState();
+    channels = Channel.getAllPublic();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children:
-          channels.map((Channel channel) {
-            return ListTile(
-              leading: Icon(Icons.tag),
-              title: Text(channel.name),
-              subtitle: Text('${channel.messages} messages'),
-            );
-          }).toList(),
+    return FutureBuilder<List<Channel>>(
+      future: channels,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return Column(
+            children:
+                snapshot.data!.map((Channel channel) {
+                  return ListTile(
+                    leading: Icon(Icons.tag),
+                    title: Text(channel.name),
+                    subtitle: Text('${channel.messageCount} messages'),
+                  );
+                }).toList(),
+          );
+        } else if (snapshot.hasError) {
+          return Text('${snapshot.error}');
+        }
+
+        //  Montrer un indicateur de chargement pendant le chargement des données
+        return const CircularProgressIndicator();
+      },
     );
   }
 }

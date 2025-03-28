@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:projet_flutter_411/pages/discussions.dart';
-import 'package:projet_flutter_411/pages/public_channels.dart';
+import 'package:latchatche_mobile/pages/discussions.dart';
+import 'package:latchatche_mobile/pages/public_channels.dart';
 
 class Tchatche extends StatefulWidget {
   const Tchatche({super.key});
