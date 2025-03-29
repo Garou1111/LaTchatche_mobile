@@ -1,6 +1,5 @@
 import 'dart:convert';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:http/http.dart' as http;
+import 'package:latchatche_mobile/models/api.dart';
 
 enum ChannelType { public, private, direct }
 
@@ -28,14 +27,14 @@ class Channel {
   factory Channel.fromJson(Map<String, dynamic> json) {
     return switch (json) {
       {
-        'id': var id,
-        'name': var name,
-        'created_at': var createdAt,
-        'type': var type,
-        'owner_id': var ownerId,
-        'owner_username': var ownerUsername,
-        'member_count': var memberCount,
-        'message_count': var messageCount,
+        'id': int id,
+        'name': String name,
+        'created_at': String createdAt,
+        'type': String type,
+        'owner_id': int ownerId,
+        'owner_username': String ownerUsername,
+        'member_count': int memberCount,
+        'message_count': int messageCount,
       } =>
         Channel(
           id: id,
@@ -54,15 +53,24 @@ class Channel {
   }
 
   static Future<List<Channel>> getAllPublic() async {
-    final response = await http.get(
-      Uri.parse('${dotenv.env['BASE_URL']}/channels'),
-    );
+    final response = await Api.get('/channels', authed: false);
 
     if (response.statusCode == 200) {
       List<dynamic> jsonResponse = json.decode(response.body);
       return jsonResponse.map((channel) => Channel.fromJson(channel)).toList();
     } else {
       throw Exception('Failed to load channels');
+    }
+  }
+
+  static Future<Channel> getChannel(int channelId) async {
+    final response = await Api.get('/channels/$channelId', authed: false);
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> jsonResponse = json.decode(response.body);
+      return Channel.fromJson(jsonResponse);
+    } else {
+      throw Exception('Failed to load channel');
     }
   }
 }
