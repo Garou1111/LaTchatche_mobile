@@ -1,10 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="projet_flutter_411"
+        android:label="latchatche_mobile"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
-        <!-- Required to fetch data from the internet. -->
-        <uses-permission android:name="android.permission.INTERNET" />
+        android:icon="@mipmap/ic_launcher"
+        android:enableOnBackInvokedCallback="true">
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -44,4 +43,6 @@
             <data android:mimeType="text/plain" />
         </intent>
     </queries>
+    <!-- Required to fetch data from the internet. -->
+    <uses-permission android:name="android.permission.INTERNET" />
 </manifest>

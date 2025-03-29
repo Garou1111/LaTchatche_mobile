@@ -1,4 +1,4 @@
-package com.example.projet_flutter_411
+package com.example.latchatche_mobile
 
 import io.flutter.embedding.android.FlutterActivity
 
