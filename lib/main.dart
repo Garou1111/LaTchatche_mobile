@@ -1,3 +1,4 @@
+import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:latchatche_mobile/screens/welcome.dart';
@@ -16,9 +17,30 @@ Future main() async {
 
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
+  static final _defaultLightColorScheme = ColorScheme.fromSwatch(
+    primarySwatch: Colors.blue,
+  );
+
+  static final _defaultDarkColorScheme = ColorScheme.fromSwatch(
+    primarySwatch: Colors.blue,
+    brightness: Brightness.dark,
+  );
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(title: 'La Tchatche', home: WelcomeScreen());
+    return DynamicColorBuilder(
+      builder: (lightColorScheme, darkColorScheme) {
+        return MaterialApp(
+          title: 'La Tchatche',
+          home: WelcomeScreen(),
+          theme: ThemeData(
+            colorScheme: lightColorScheme ?? _defaultLightColorScheme,
+          ),
+          darkTheme: ThemeData(
+            colorScheme: darkColorScheme ?? _defaultDarkColorScheme,
+          ),
+        );
+      },
+    );
   }
 }
