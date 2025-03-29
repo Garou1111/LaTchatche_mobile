@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:latchatche_mobile/models/channel.dart';
 
-class PublicChannels extends StatefulWidget {
-  const PublicChannels({super.key});
+class PublicChannelsScreen extends StatefulWidget {
+  const PublicChannelsScreen({super.key});
 
   @override
-  State<PublicChannels> createState() => _PublicChannels();
+  State<PublicChannelsScreen> createState() => _PublicChannelsScreenState();
 }
 
-class _PublicChannels extends State<PublicChannels> {
+class _PublicChannelsScreenState extends State<PublicChannelsScreen> {
   late Future<List<Channel>> channels;
 
   @override
