@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:latchatche_mobile/pages/discussions.dart';
-import 'package:latchatche_mobile/pages/public_channels.dart';
+import 'package:latchatche_mobile/screens/discussions.dart';
+import 'package:latchatche_mobile/screens/public_channels.dart';
 
 class Tchatche extends StatefulWidget {
   const Tchatche({super.key});
@@ -21,11 +21,15 @@ class _TchatcheState extends State<Tchatche> {
   int currentPageIndex = 1;
 
   static List<Page> pages = <Page>[
-    Page(icon: Icon(Icons.tag), title: 'Discussions', widget: Discussions()),
+    Page(
+      icon: Icon(Icons.tag),
+      title: 'Discussions',
+      widget: DiscussionsScreen(),
+    ),
     Page(
       icon: Icon(Icons.public),
       title: 'Salons publics',
-      widget: PublicChannels(),
+      widget: PublicChannelsScreen(),
     ),
   ];
 
@@ -33,6 +37,7 @@ class _TchatcheState extends State<Tchatche> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text(pages.elementAt(currentPageIndex).title),
         actions: <Widget>[
           IconButton(

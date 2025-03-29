@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:latchatche_mobile/tchatche.dart';
+import 'package:latchatche_mobile/screens/welcome.dart';
 
 Future main() async {
   // On charge les variables d'environnement
@@ -19,10 +19,6 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'La Tchatche',
-      initialRoute: '/',
-      home: Tchatche(),
-    );
+    return MaterialApp(title: 'La Tchatche', home: WelcomeScreen());
   }
 }
