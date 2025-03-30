@@ -20,6 +20,7 @@ class Api {
   static Future<http.Response> get(
     String resource, {
     bool authed = true,
+    bool loginRedirect = true,
   }) async {
     String? token;
     if (authed) {
@@ -29,6 +30,7 @@ class Api {
     final response = await http.get(
       Uri.parse('${dotenv.env['BASE_URL']}$resource'),
       headers: {
+        // Si l'utilisateur est connecté, on ajoute le token dans les headers
         if (authed && token != null) 'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
       },
@@ -36,7 +38,7 @@ class Api {
 
     // si le token est expiré ou invalide
     // on navigue vers la page de login et on supprime le token
-    if (response.statusCode == 401) {
+    if (response.statusCode == 401 && loginRedirect) {
       GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
       BuildContext? context = navigatorKey.currentContext;
 
