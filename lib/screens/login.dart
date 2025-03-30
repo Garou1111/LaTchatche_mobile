@@ -1,5 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:http/http.dart' as http;
 import 'package:latchatche_mobile/tchatche.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -15,6 +20,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
 
   bool _showPassword = false;
+  String? _errorMessage;
 
   @override
   Widget build(BuildContext context) {
@@ -70,6 +76,16 @@ class _LoginScreenState extends State<LoginScreen> {
                 // show password toggle
               ),
               const SizedBox(height: 16),
+              if (_errorMessage != null)
+                Column(
+                  children: [
+                    Text(
+                      _errorMessage!,
+                      style: const TextStyle(color: Colors.red),
+                    ),
+                    const SizedBox(height: 16),
+                  ],
+                ),
               SizedBox(
                 width: double.infinity,
                 child: FilledButton(
@@ -89,17 +105,39 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _login() async {
-    // TODO
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (context) => const Tchatche()),
-      // Réinitialiser la pile de navigation
-      (Route<dynamic> route) => false,
+    final response = await http.post(
+      Uri.parse('${dotenv.env['BASE_URL']}/login'),
+      body: jsonEncode({
+        'username': _usernameController.text,
+        'password': _passwordController.text,
+      }),
     );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      final token = data['token'] as String;
+
+      // On stocke le token dans le stockage local
+      _storeToken(token);
+
+      // Naviguer vers la page d'accueil
+      Navigator.pushAndRemoveUntil(
+        // ignore: use_build_context_synchronously
+        context,
+        MaterialPageRoute(builder: (context) => const Tchatche()),
+        (Route<dynamic> route) => false,
+      );
+    } else {
+      final data = jsonDecode(response.body);
+      final error = data['error'] as String;
+      setState(() {
+        _errorMessage = error;
+      });
+    }
   }
 
-  // Future<void> _storeToken(String token) async {
-  //   final storage = await SharedPreferences.getInstance();
-  //   storage.setString('session_token', token);
-  // }
+  Future<void> _storeToken(String token) async {
+    final storage = await SharedPreferences.getInstance();
+    storage.setString('session_token', token);
+  }
 }
