@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:latchatche_mobile/models/channel.dart';
+import 'package:latchatche_mobile/screens/channel.dart';
 
 class PublicChannelsScreen extends StatefulWidget {
   const PublicChannelsScreen({super.key});
@@ -27,6 +28,14 @@ class _PublicChannelsScreenState extends State<PublicChannelsScreen> {
             children:
                 snapshot.data!.map((Channel channel) {
                   return ListTile(
+                    onTap:
+                        () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (context) => ChannelScreen(channel: channel),
+                          ),
+                        ),
                     leading: Icon(Icons.tag),
                     title: Text(channel.name),
                     subtitle: Text('${channel.messageCount} messages'),
