@@ -15,7 +15,7 @@ class _PublicChannelsScreenState extends State<PublicChannelsScreen> {
   @override
   void initState() {
     super.initState();
-    channels = Channel.getAllPublic();
+    channels = Channel.getPublicChannels();
   }
 
   @override

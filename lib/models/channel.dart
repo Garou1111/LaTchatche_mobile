@@ -52,8 +52,19 @@ class Channel {
     };
   }
 
-  static Future<List<Channel>> getAllPublic() async {
-    final response = await Api.get('/channels', authed: false);
+  static Future<List<Channel>> getMyChannels() async {
+    final response = await Api.get('/channels');
+
+    if (response.statusCode == 200) {
+      List<dynamic> jsonResponse = json.decode(response.body);
+      return jsonResponse.map((channel) => Channel.fromJson(channel)).toList();
+    } else {
+      throw Exception('Failed to load channels');
+    }
+  }
+
+  static Future<List<Channel>> getPublicChannels() async {
+    final response = await Api.get('/channels/public');
 
     if (response.statusCode == 200) {
       List<dynamic> jsonResponse = json.decode(response.body);
