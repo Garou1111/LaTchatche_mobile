@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
+import 'package:latchatche_mobile/models/api.dart';
 import 'package:latchatche_mobile/tchatche.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -105,13 +105,10 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _login() async {
-    final response = await http.post(
-      Uri.parse('${dotenv.env['BASE_URL']}/login'),
-      body: jsonEncode({
-        'username': _usernameController.text,
-        'password': _passwordController.text,
-      }),
-    );
+    final response = await Api.post('/login', {
+      'username': _usernameController.text,
+      'password': _passwordController.text,
+    }, authed: false);
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
@@ -137,7 +134,18 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _storeToken(String token) async {
-    final storage = await SharedPreferences.getInstance();
-    storage.setString('session_token', token);
+    final sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.setString('session_token', token);
+
+    // On envoie une requête au serveur pour vérifier si le token est valide
+    Response response = await Api.get('/me', loginRedirect: false);
+
+    // on met en cache la réponse
+    final jsonResponse = jsonDecode(response.body);
+    await sharedPreferences.setInt('account_id', jsonResponse['id']);
+    await sharedPreferences.setString(
+      'account_username',
+      jsonResponse['username'],
+    );
   }
 }

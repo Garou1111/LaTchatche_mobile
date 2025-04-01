@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -76,12 +78,18 @@ class MainApp extends StatelessWidget {
     // On envoie une requête au serveur pour vérifier si le token est valide
     Response response = await Api.get('/me', loginRedirect: false);
 
-    print(response.statusCode);
-
     if (response.statusCode == 401) {
       // Le token est invalide
       return false;
     }
+
+    // on met en cache la réponse
+    final jsonResponse = jsonDecode(response.body);
+    await sharedPreferences.setInt('account_id', jsonResponse['id']);
+    await sharedPreferences.setString(
+      'account_username',
+      jsonResponse['username'],
+    );
 
     return true;
   }
