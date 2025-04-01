@@ -42,9 +42,9 @@ class _TchatcheState extends State<Tchatche> {
         title: Text(pages.elementAt(currentPageIndex).title),
         actions: <Widget>[
           IconButton(
-            onPressed: () {},
             icon: Icon(Icons.add),
             tooltip: 'Créer un salon',
+            onPressed: () {},
           ),
           IconButton(
             icon: Icon(Icons.account_circle_outlined),
@@ -72,7 +72,9 @@ class _TchatcheState extends State<Tchatche> {
               return NavigationDestination(icon: page.icon, label: page.title);
             }).toList(),
       ),
-      body: pages.elementAt(currentPageIndex).widget,
+      body: SingleChildScrollView(
+        child: pages.elementAt(currentPageIndex).widget,
+      ),
     );
   }
 }
