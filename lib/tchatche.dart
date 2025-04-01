@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:latchatche_mobile/screens/account_modal.dart';
 import 'package:latchatche_mobile/screens/discussions.dart';
 import 'package:latchatche_mobile/screens/public_channels.dart';
 
@@ -18,7 +19,7 @@ class Page {
 }
 
 class _TchatcheState extends State<Tchatche> {
-  int currentPageIndex = 1;
+  int currentPageIndex = 0;
 
   static List<Page> pages = <Page>[
     Page(
@@ -46,9 +47,16 @@ class _TchatcheState extends State<Tchatche> {
             tooltip: 'Créer un salon',
           ),
           IconButton(
-            onPressed: () {},
             icon: Icon(Icons.account_circle_outlined),
             tooltip: "Mon profil",
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (_) {
+                  return const AccountModal();
+                },
+              );
+            },
           ),
         ],
       ),
