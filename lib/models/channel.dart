@@ -56,7 +56,7 @@ class Channel {
     final response = await Api.get('/channels');
 
     if (response.statusCode == 200) {
-      List<dynamic> jsonResponse = json.decode(response.body);
+      List<dynamic> jsonResponse = jsonDecode(response.body);
       return jsonResponse.map((channel) => Channel.fromJson(channel)).toList();
     } else {
       throw Exception('Failed to load channels');
@@ -67,7 +67,7 @@ class Channel {
     final response = await Api.get('/channels/public');
 
     if (response.statusCode == 200) {
-      List<dynamic> jsonResponse = json.decode(response.body);
+      List<dynamic> jsonResponse = jsonDecode(response.body);
       return jsonResponse.map((channel) => Channel.fromJson(channel)).toList();
     } else {
       throw Exception('Failed to load channels');
@@ -78,7 +78,7 @@ class Channel {
     final response = await Api.get('/channels/$channelId', authed: false);
 
     if (response.statusCode == 200) {
-      Map<String, dynamic> jsonResponse = json.decode(response.body);
+      Map<String, dynamic> jsonResponse = jsonDecode(response.body);
       return Channel.fromJson(jsonResponse);
     } else {
       throw Exception('Failed to load channel');

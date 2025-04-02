@@ -70,10 +70,23 @@ class Message {
     );
 
     if (response.statusCode == 200) {
-      List<dynamic> jsonResponse = json.decode(response.body);
+      List<dynamic> jsonResponse = jsonDecode(response.body);
       return jsonResponse.map((message) => Message.fromJson(message)).toList();
     } else {
       throw Exception('Failed to load channels');
+    }
+  }
+
+  static Future<Message> create(int channelId, String content) async {
+    final response = await Api.post('/channels/$channelId/messages', {
+      'content': content,
+    });
+
+    if (response.statusCode == 200) {
+      final jsonResponse = jsonDecode(response.body);
+      return Message.fromJson(jsonResponse);
+    } else {
+      throw Exception('Failed to send message');
     }
   }
 }
