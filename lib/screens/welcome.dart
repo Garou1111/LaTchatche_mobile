@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:latchatche_mobile/screens/login.dart';
+import 'package:latchatche_mobile/screens/register.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
@@ -49,7 +50,12 @@ class WelcomeScreen extends StatelessWidget {
               width: double.infinity,
               child: TextButton(
                 onPressed: () {
-                  // todo
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const RegisterScreen(),
+                    ),
+                  );
                 },
                 child: const Text("S'inscrire"),
               ),
