@@ -1,0 +1,42 @@
+# Ce workflow GitHub Actions permet de compiler une application Flutter pour Android et de générer un APK qu'on uploade en tant qu'artéfact.
+# Il est déclenché sur les pull requests et les pushes sur la branche main.
+name: "Build Flutter APK"
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # On récupère le code source
+      - uses: actions/checkout@v4
+
+      # On configure Java
+      - uses: actions/setup-java@v4
+        with:
+          java-version: "21"
+
+      # On configure Flutter
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.29.1"
+          channel: "stable"
+
+      # Installation des dépendances
+      - run: flutter pub get
+
+      # On compile l'APK
+      - run: flutter build apk
+
+      # On uploade l'artéfact
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release.apk
+          path: build/app/outputs/flutter-apk/app-release.apk
