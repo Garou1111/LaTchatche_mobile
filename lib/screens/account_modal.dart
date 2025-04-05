@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:latchatche_mobile/screens/welcome.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:latchatche_mobile/screens/settings.dart';
 
 class AccountModal extends StatelessWidget {
   const AccountModal({super.key});
@@ -29,11 +30,18 @@ class AccountModal extends StatelessWidget {
                       subtitle: 'Mon profil',
                       Icons.account_circle_outlined,
                       onTap: () {},
+                      context: context, // Pass context to _listItem
                     ),
                     _listItem(
                       'Paramètres',
                       Icons.settings_outlined,
-                      onTap: () {},
+                      onTap: () async {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => SettingsScreen()),
+                        );
+                      },
+                      context: context, // Pass context to _listItem
                     ),
                     _listItem(
                       'Déconnexion',
@@ -45,9 +53,10 @@ class AccountModal extends StatelessWidget {
                           MaterialPageRoute(
                             builder: (context) => const WelcomeScreen(),
                           ),
-                          (route) => false,
+                              (route) => false,
                         );
                       },
+                      context: context, // Pass context to _listItem
                     ),
                     const SizedBox(height: 8),
                     const Divider(color: Colors.grey, height: 1),
@@ -64,12 +73,11 @@ class AccountModal extends StatelessWidget {
                           await launchUrl(url);
                         }
                       },
+                      context: context, // Pass context to _listItem
                     ),
                   ],
                 ),
                 const SizedBox(height: 16),
-                // const Divider(height: 1, color: Colors.grey),
-                // const SizedBox(height: 16),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -92,20 +100,27 @@ class AccountModal extends StatelessWidget {
   }
 
   ListTile _listItem(
-    String title,
-    IconData icon, {
-    required Function() onTap,
-    String? subtitle,
-  }) {
+      String title,
+      IconData icon, {
+        required Function() onTap,
+        String? subtitle,
+        required BuildContext context, // Add context parameter
+      }) {
     return ListTile(
       contentPadding: const EdgeInsets.only(left: 32, right: 32),
       leading: Icon(icon),
       title: Text(title),
       onTap: onTap,
-      subtitle:
-          subtitle != null
-              ? Text(subtitle, style: ThemeData().textTheme.bodySmall)
-              : null,
+      subtitle: subtitle != null
+          ? Text(
+        subtitle,
+        style: TextStyle(
+          color: Theme.of(context).brightness == Brightness.dark
+              ? Colors.white70// Change subtitle color to white in dark mode
+              : null, // Default color for light mode (inherits from theme)
+        ),
+      )
+          : null,
     );
   }
 }

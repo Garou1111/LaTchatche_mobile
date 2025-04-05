@@ -26,10 +26,16 @@ class MessageWidget extends StatelessWidget {
               bottomLeft: Radius.circular(20),
               bottomRight: Radius.circular(20),
             ),
-            color: Colors.grey.shade200,
+            color: Colors.grey.shade200, // Keeping the same background color
           ),
           padding: EdgeInsets.all(16),
-          child: Text(message.content, style: TextStyle(fontSize: 15)),
+          child: Text(
+            message.content,
+            style: TextStyle(
+              fontSize: 15,
+              color: Colors.black, // Ensuring the text color stays black
+            ),
+          ),
         ),
       ),
     );
