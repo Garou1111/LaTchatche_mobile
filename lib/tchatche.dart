@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:latchatche_mobile/screens/account_modal.dart';
+import 'package:latchatche_mobile/screens/create_channel.dart';
 import 'package:latchatche_mobile/screens/discussions.dart';
 import 'package:latchatche_mobile/screens/public_channels.dart';
 
@@ -136,7 +137,14 @@ class _TchatcheState extends State<Tchatche> {
         IconButton(
           icon: Icon(Icons.add),
           tooltip: 'Créer un salon',
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const CreateChannelScreen(),
+              ),
+            );
+          },
         ),
         IconButton(
           icon: Icon(Icons.account_circle_outlined),
