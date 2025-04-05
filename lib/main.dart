@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart';
@@ -29,50 +28,32 @@ Future main() async {
 
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
-  static final _defaultLightColorScheme = ColorScheme.fromSwatch(
-    primarySwatch: Colors.blue,
-  );
-
-  static final _defaultDarkColorScheme = ColorScheme.fromSwatch(
-    primarySwatch: Colors.blue,
-    brightness: Brightness.dark,
-  );
 
   @override
   Widget build(BuildContext context) {
     return Consumer<ThemeProvider>(
       builder: (context, themeProvider, child) {
-        return DynamicColorBuilder(
-          builder: (lightColorScheme, darkColorScheme) {
-            return MaterialApp(
-              title: 'La Tchatche',
-              theme: ThemeData(
-                colorScheme: lightColorScheme ?? _defaultLightColorScheme,
-              ),
-              darkTheme: ThemeData(
-                colorScheme: darkColorScheme ?? _defaultDarkColorScheme,
-              ),
-              themeMode:
-                  themeProvider.themeMode, // Use themeMode from ThemeProvider
-              home: FutureBuilder(
-                future: _checkLogin(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    // si la connexion est en cours, on affiche un indicateur de chargement
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
-                    return const Center(child: Text('Erreur de connexion'));
-                  } else if (snapshot.data == true) {
-                    // si l'utilisateur est connecté, on affiche l'écran principal
-                    return const Tchatche();
-                  } else {
-                    // sinon, on affiche l'écran de connexion
-                    return const WelcomeScreen();
-                  }
-                },
-              ),
-            );
-          },
+        return MaterialApp(
+          title: 'La Tchatche',
+          themeMode:
+              themeProvider.themeMode, // Use themeMode from ThemeProvider
+          home: FutureBuilder(
+            future: _checkLogin(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                // si la connexion est en cours, on affiche un indicateur de chargement
+                return const Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return const Center(child: Text('Erreur de connexion'));
+              } else if (snapshot.data == true) {
+                // si l'utilisateur est connecté, on affiche l'écran principal
+                return const Tchatche();
+              } else {
+                // sinon, on affiche l'écran de connexion
+                return const WelcomeScreen();
+              }
+            },
+          ),
         );
       },
     );
