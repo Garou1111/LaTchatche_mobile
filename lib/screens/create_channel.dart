@@ -15,6 +15,26 @@ class _CreateChannelScreen extends State<CreateChannelScreen> {
   final TextEditingController _channelNameController = TextEditingController();
 
   String? _errorMessage;
+  String? _notice;
+
+  void _normalizeName(String name) {
+    // Normalisation du nom
+    final normalizedName = name
+        .toLowerCase()
+        // On retire les caractères spéciaux (en ne comptant pas les accents)
+        .replaceAll(RegExp(r'[^a-z0-9éèàêëôöîïùûüç\-_\s]'), '')
+        // On remplace les espaces par des tirets
+        .replaceAll(RegExp(r'\s'), '-')
+        // On retire les tirets en fin de chaîne
+        .replaceAll(RegExp(r'-+$'), '');
+
+    setState(() {
+      _notice =
+          name != normalizedName
+              ? 'Certains caractères ne peuvent pas être utilisés.\nLe salon sera créé avec le nom #$normalizedName'
+              : '';
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +42,7 @@ class _CreateChannelScreen extends State<CreateChannelScreen> {
       appBar: AppBar(title: const Text('Créer un salon')),
       body: SafeArea(
         child: Form(
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           key: _formKey,
           child: Container(
             padding: const EdgeInsets.all(16),
@@ -37,19 +58,26 @@ class _CreateChannelScreen extends State<CreateChannelScreen> {
                     TextFormField(
                       controller: _channelNameController,
                       autocorrect: false,
+                      onChanged: _normalizeName,
                       maxLength: 30,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: "Nom du salon (préfixé par un #)",
+                        errorText: _errorMessage,
                       ),
                     ),
                     const SizedBox(height: 16),
-                    if (_errorMessage != null)
-                      Column(
+                    if (_notice != null)
+                      Row(
                         children: [
+                          const Icon(
+                            Icons.warning_amber_outlined,
+                            color: Colors.deepOrange,
+                          ),
+                          const SizedBox(width: 8),
                           Text(
-                            _errorMessage!,
-                            style: const TextStyle(color: Colors.red),
+                            _notice!,
+                            style: TextStyle(color: Colors.deepOrange),
                           ),
                           const SizedBox(height: 16),
                         ],
