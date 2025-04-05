@@ -81,7 +81,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   children: [
                     Text(
                       _errorMessage!,
-                      style: const TextStyle(color: Colors.red),
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.error,
+                      ),
                     ),
                     const SizedBox(height: 16),
                   ],

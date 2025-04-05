@@ -18,7 +18,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
 
   bool _showPassword = false;
   String? _errorMessage;
@@ -39,9 +40,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 controller: _usernameController,
                 validator:
                     (value) =>
-                value == null || value.isEmpty
-                    ? 'Veuillez entrer un nom d\'utilisateur'
-                    : null,
+                        value == null || value.isEmpty
+                            ? 'Veuillez entrer un nom d\'utilisateur'
+                            : null,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: "Nom d'utilisateur",
@@ -55,17 +56,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 keyboardType: TextInputType.visiblePassword,
                 validator:
                     (value) =>
-                value == null || value.isEmpty
-                    ? 'Veuillez entrer un mot de passe'
-                    : null,
+                        value == null || value.isEmpty
+                            ? 'Veuillez entrer un mot de passe'
+                            : null,
                 decoration: InputDecoration(
                   border: const OutlineInputBorder(),
                   labelText: 'Mot de passe',
                   suffixIcon: IconButton(
                     icon:
-                    _showPassword
-                        ? const Icon(Icons.visibility)
-                        : const Icon(Icons.visibility_off),
+                        _showPassword
+                            ? const Icon(Icons.visibility)
+                            : const Icon(Icons.visibility_off),
                     onPressed: () {
                       setState(() {
                         _showPassword = !_showPassword;
@@ -84,23 +85,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 keyboardType: TextInputType.visiblePassword,
                 validator:
                     (value) =>
-                value == null || value.isEmpty
-                    ? 'Veuillez confirmer votre mot de passe'
-                    : null,
+                        value == null || value.isEmpty
+                            ? 'Veuillez confirmer votre mot de passe'
+                            : null,
                 decoration: InputDecoration(
-                    border: const OutlineInputBorder(),
-                    labelText: 'Confirmer le mot de passe',
-                    suffixIcon: IconButton(
-                      icon:
-                      _showPassword
-                          ? const Icon(Icons.visibility)
-                          : const Icon(Icons.visibility_off),
-                      onPressed: () {
-                        setState(() {
-                          _showPassword = !_showPassword;
-                        });
-                      },
-                    )
+                  border: const OutlineInputBorder(),
+                  labelText: 'Confirmer le mot de passe',
+                  suffixIcon: IconButton(
+                    icon:
+                        _showPassword
+                            ? const Icon(Icons.visibility)
+                            : const Icon(Icons.visibility_off),
+                    onPressed: () {
+                      setState(() {
+                        _showPassword = !_showPassword;
+                      });
+                    },
+                  ),
                 ),
                 obscureText: !_showPassword,
               ),
@@ -110,7 +111,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   children: [
                     Text(
                       _errorMessage!,
-                      style: const TextStyle(color: Colors.red),
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.error,
+                      ),
                     ),
                     const SizedBox(height: 16),
                   ],
@@ -159,7 +162,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         // ignore: use_build_context_synchronously
         context,
         MaterialPageRoute(builder: (context) => const Tchatche()),
-            (Route<dynamic> route) => false,
+        (Route<dynamic> route) => false,
       );
     } else {
       final data = jsonDecode(response.body);
