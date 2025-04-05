@@ -6,9 +6,9 @@ import 'package:http/http.dart';
 import 'package:latchatche_mobile/models/api.dart';
 import 'package:latchatche_mobile/screens/welcome.dart';
 import 'package:latchatche_mobile/tchatche.dart';
-import 'package:provider/provider.dart';  // Import provider
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'theme_provider.dart';  // Import ThemeProvider
+import 'theme_provider.dart';
 
 Future main() async {
   // On charge les variables d'environnement
@@ -52,7 +52,8 @@ class MainApp extends StatelessWidget {
               darkTheme: ThemeData(
                 colorScheme: darkColorScheme ?? _defaultDarkColorScheme,
               ),
-              themeMode: themeProvider.themeMode,  // Use themeMode from ThemeProvider
+              themeMode:
+                  themeProvider.themeMode, // Use themeMode from ThemeProvider
               home: FutureBuilder(
                 future: _checkLogin(),
                 builder: (context, snapshot) {

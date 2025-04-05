@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:latchatche_mobile/theme_provider.dart';
 
 class SettingsScreen extends StatelessWidget {
+  const SettingsScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -12,10 +14,14 @@ class SettingsScreen extends StatelessWidget {
           ListTile(
             title: Text('Thème Sombre'),
             trailing: Switch(
-              value: Provider.of<ThemeProvider>(context).themeMode == ThemeMode.dark,
+              value:
+                  Provider.of<ThemeProvider>(context).themeMode ==
+                  ThemeMode.dark,
               onChanged: (value) {
-                Provider.of<ThemeProvider>(context, listen: false)
-                    .toggleTheme(value ? ThemeMode.dark : ThemeMode.light);
+                Provider.of<ThemeProvider>(
+                  context,
+                  listen: false,
+                ).toggleTheme(value ? ThemeMode.dark : ThemeMode.light);
               },
             ),
           ),
@@ -28,8 +34,10 @@ class SettingsScreen extends StatelessWidget {
                   groupValue: Provider.of<ThemeProvider>(context).themeMode,
                   onChanged: (ThemeMode? value) {
                     if (value != null) {
-                      Provider.of<ThemeProvider>(context, listen: false)
-                          .toggleTheme(value);
+                      Provider.of<ThemeProvider>(
+                        context,
+                        listen: false,
+                      ).toggleTheme(value);
                     }
                   },
                 ),
@@ -39,8 +47,10 @@ class SettingsScreen extends StatelessWidget {
                   groupValue: Provider.of<ThemeProvider>(context).themeMode,
                   onChanged: (ThemeMode? value) {
                     if (value != null) {
-                      Provider.of<ThemeProvider>(context, listen: false)
-                          .toggleTheme(value);
+                      Provider.of<ThemeProvider>(
+                        context,
+                        listen: false,
+                      ).toggleTheme(value);
                     }
                   },
                 ),
