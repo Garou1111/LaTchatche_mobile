@@ -7,6 +7,9 @@ import 'package:latchatche_mobile/screens/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Api {
+  static String get baseUrl =>
+      dotenv.env['BASE_URL'] ?? 'https://latchatche.clembs.com/api';
+
   static Future<String> getToken() async {
     final sharedPreferences = await SharedPreferences.getInstance();
     final token = sharedPreferences.getString('session_token');
@@ -30,7 +33,7 @@ class Api {
     }
 
     final response = await http.get(
-      Uri.parse('${dotenv.env['BASE_URL']}$resource'),
+      Uri.parse('$baseUrl$resource'),
       headers: {
         // Si l'utilisateur est connecté, on ajoute le token dans les headers
         if (authed && token != null) 'Authorization': 'Bearer $token',
@@ -72,7 +75,7 @@ class Api {
     }
 
     final response = await http.post(
-      Uri.parse('${dotenv.env['BASE_URL']}$resource'),
+      Uri.parse('$baseUrl$resource'),
       headers: {
         // Si l'utilisateur est connecté, on ajoute le token dans les headers
         if (authed && token != null) 'Authorization': 'Bearer $token',
