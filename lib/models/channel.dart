@@ -84,4 +84,18 @@ class Channel {
       throw Exception('Failed to load channel');
     }
   }
+
+  static Future<Channel> createChannel({ required String name }) async {
+    final response = await Api.post('/channels', {
+      'name': name,
+      'type': 'public',
+    });
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+      return Channel.fromJson(jsonResponse);
+    } else {
+      throw Exception('Failed to create channel');
+    }
+  }
 }
