@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:latchatche_mobile/models/channel.dart';
 import 'package:latchatche_mobile/models/message.dart';
@@ -23,11 +25,30 @@ class _ChannelScreenState extends State<ChannelScreen> {
   // Si le bouton d'envoi est activé ou non
   bool _isButtonEnabled = false;
 
+  // Timer pour rafraîchir la liste des messages
+  Timer? _timer;
+
   @override
   void initState() {
     super.initState();
-    // on initialise la liste des messages
-    _futureMessages = Message.findAllForChannel(widget.channel.id);
+    _fetchMessages();
+    _timer = Timer.periodic(const Duration(seconds: 2), (timer) {
+      _fetchMessages();
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    _textEditingController.dispose();
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _fetchMessages() {
+    setState(() {
+      _futureMessages = Message.findAllForChannel(widget.channel.id);
+    });
   }
 
   void _addMessage() async {
@@ -43,7 +64,16 @@ class _ChannelScreenState extends State<ChannelScreen> {
       });
       // on efface le contenu du champ de texte
       _textEditingController.clear();
+      _scrollToBottom();
     }
+  }
+
+  void _scrollToBottom() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.hasClients) {
+        _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+      }
+    });
   }
 
   @override
@@ -75,86 +105,84 @@ class _ChannelScreenState extends State<ChannelScreen> {
         children: <Widget>[
           Expanded(
             child: Container(
-              padding: const EdgeInsets.only(left: 16, right: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: FutureBuilder<List<Message>>(
                 future: _futureMessages,
                 builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    // on ajoute les infos dans _messages
+                  if (snapshot.hasError) {
+                    return Center(
+                      child: Text(
+                        'Erreur de connexion : ${snapshot.error}',
+                        style: const TextStyle(color: Colors.red),
+                      ),
+                    );
+                  } else if (snapshot.hasData) {
                     _messages = snapshot.data ?? [];
-
-                    // on scrolle tout en bas
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                      if (_scrollController.hasClients) {
-                        _scrollController.jumpTo(
-                          _scrollController.position.maxScrollExtent,
-                        );
-                      }
-                    });
+                    _scrollToBottom();
 
                     return ListView.builder(
                       controller: _scrollController,
                       itemCount: _messages.length,
-                      shrinkWrap: true,
-                      physics: const AlwaysScrollableScrollPhysics(),
+                      // physics: const AlwaysScrollableScrollPhysics(),
                       itemBuilder:
                           (context, index) => MessageWidget(
                             message: _messages[index],
                             messages: _messages,
                           ),
                     );
-                  } else if (snapshot.hasError) {
-                    return Text('${snapshot.error}');
                   }
 
                   //  Montrer un indicateur de chargement pendant le chargement des données
-                  return const CircularProgressIndicator();
+                  return const Center(child: CircularProgressIndicator());
                 },
               ),
             ),
           ),
-          Container(
-            padding: const EdgeInsets.all(12),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextFormField(
-                    controller: _textEditingController,
-                    onChanged: (value) {
-                      // si le champ de texte est vide, le bouton d'envoi est désactivé
-                      setState(() {
-                        _isButtonEnabled = value.isNotEmpty;
-                      });
-                    },
-                    decoration: InputDecoration(
-                      border: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(60)),
-                        borderSide: BorderSide.none,
-                      ),
-                      // fillColor: Theme.of(context).colorScheme.primaryContainer,
-                      filled: true,
-                      hintText:
-                          'Envoyez un message dans #${widget.channel.name}',
-                      contentPadding: const EdgeInsets.all(16),
-                    ),
-                    // on montre le bouton envoyer plutôt que retour à la ligne
-                    textInputAction: TextInputAction.go,
-                    // dès que l'utilisateur envoie le message (appui sur Entrée)
-                    onFieldSubmitted: (_) => _addMessage(),
-                  ),
+          _buildMessageInput(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMessageInput() {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      child: Row(
+        children: [
+          Expanded(
+            child: TextFormField(
+              controller: _textEditingController,
+              onChanged: (value) {
+                // si le champ de texte est vide, le bouton d'envoi est désactivé
+                setState(() {
+                  _isButtonEnabled = value.isNotEmpty;
+                });
+              },
+              decoration: InputDecoration(
+                border: const OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(60)),
+                  borderSide: BorderSide.none,
                 ),
-                const SizedBox(width: 4),
-                IconButton.filled(
-                  tooltip: 'Envoyer',
-                  padding: const EdgeInsets.all(12),
-                  disabledColor: Theme.of(context).colorScheme.primary,
-                  color: Theme.of(context).colorScheme.onPrimary,
-                  icon: const Icon(Icons.send),
-                  // le bouton d'envoi est désactivé si le champ de texte est vide
-                  onPressed: _isButtonEnabled ? _addMessage : null,
-                ),
-              ],
+                // fillColor: Theme.of(context).colorScheme.primaryContainer,
+                filled: true,
+                hintText: 'Envoyez un message dans #${widget.channel.name}',
+                contentPadding: const EdgeInsets.all(16),
+              ),
+              // on montre le bouton envoyer plutôt que retour à la ligne
+              textInputAction: TextInputAction.go,
+              // dès que l'utilisateur envoie le message (appui sur Entrée)
+              onFieldSubmitted: (_) => _addMessage(),
             ),
+          ),
+          const SizedBox(width: 4),
+          IconButton.filled(
+            tooltip: 'Envoyer',
+            padding: const EdgeInsets.all(12),
+            disabledColor: Theme.of(context).colorScheme.primary,
+            color: Theme.of(context).colorScheme.onPrimary,
+            icon: const Icon(Icons.send),
+            // le bouton d'envoi est désactivé si le champ de texte est vide
+            onPressed: _isButtonEnabled ? _addMessage : null,
           ),
         ],
       ),
