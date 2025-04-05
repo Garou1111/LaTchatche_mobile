@@ -21,6 +21,7 @@ jobs:
       # On configure Java
       - uses: actions/setup-java@v4
         with:
+          distribution: "temurin"
           java-version: "21"
 
       # On configure Flutter
