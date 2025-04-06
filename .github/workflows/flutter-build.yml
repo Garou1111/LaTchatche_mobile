@@ -31,7 +31,10 @@ jobs:
           channel: "stable"
 
       # On crée un .env avec la variable d'environnement BASE_URL
-      - run: echo "BASE_URL=${{ secrets.BASE_URL }}" > .env
+      - shell: bash
+        env:
+          BASE_URL: ${{ secrets.BASE_URL }}
+        run: echo "BASE_URL=$BASE_URL" > .env
 
       # Installation des dépendances
       - run: flutter pub get
