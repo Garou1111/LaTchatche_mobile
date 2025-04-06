@@ -148,7 +148,32 @@ class _ChannelScreenState extends State<ChannelScreen> {
               ),
             ),
           ),
-          _buildMessageInput(),
+          if (widget.channel.isMember)
+            _buildMessageInput()
+          else
+            Container(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                children: [
+                  Text(
+                    'Vous devez rejoindre le salon pour envoyer des messages.',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
+                    ),
+                  ),
+                  FilledButton(
+                    onPressed: () async {
+                      await Channel.joinChannel(widget.channel.id);
+                      setState(() {
+                        widget.channel.isMember = true;
+                      });
+                      _fetchMessages();
+                    },
+                    child: const Text('Rejoindre le salon'),
+                  ),
+                ],
+              ),
+            ),
         ],
       ),
     );
