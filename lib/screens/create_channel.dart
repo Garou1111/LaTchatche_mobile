@@ -67,7 +67,7 @@ class _CreateChannelScreen extends State<CreateChannelScreen> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    if (_notice != null)
+                    if (_notice != null && _notice!.isNotEmpty)
                       Row(
                         children: [
                           const Icon(
@@ -110,14 +110,24 @@ class _CreateChannelScreen extends State<CreateChannelScreen> {
       Channel newChannel = await Channel.createChannel(
         name: _channelNameController.text,
       );
-      // Naviguer vers la page créée
-      Navigator.pop(context);
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ChannelScreen(channel: newChannel),
+      // on affiche un message de succès
+      final msg = ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Le salon #${newChannel.name} a été créé !'),
+          duration: const Duration(milliseconds: 1250),
         ),
       );
+
+      // on redirige vers le salon
+      msg.closed.then((_) {
+        Navigator.pop(context);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ChannelScreen(channel: newChannel),
+          ),
+        );
+      });
     } catch (error) {
       setState(() {
         _errorMessage = error.toString();
