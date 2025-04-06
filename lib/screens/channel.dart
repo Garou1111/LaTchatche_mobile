@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:latchatche_mobile/models/channel.dart';
 import 'package:latchatche_mobile/models/message.dart';
 import 'package:latchatche_mobile/widgets/message.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ChannelScreen extends StatefulWidget {
   final Channel channel;
@@ -28,10 +29,14 @@ class _ChannelScreenState extends State<ChannelScreen> {
   // Timer pour rafraîchir la liste des messages
   Timer? _timer;
 
+  // L'identifiant de l'utilisateur actuel
+  int? _currentAccountId;
+
   @override
   void initState() {
     super.initState();
     _fetchMessages();
+    _loadCurrentUserId();
     _timer = Timer.periodic(const Duration(seconds: 2), (timer) {
       _fetchMessages();
     });
@@ -48,6 +53,13 @@ class _ChannelScreenState extends State<ChannelScreen> {
   void _fetchMessages() {
     setState(() {
       _futureMessages = Message.findAllForChannel(widget.channel.id);
+    });
+  }
+
+  Future<void> _loadCurrentUserId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _currentAccountId = prefs.getInt('account_id'); // Adjust key as needed
     });
   }
 
@@ -93,13 +105,6 @@ class _ChannelScreenState extends State<ChannelScreen> {
             ),
           ],
         ),
-        actions: <Widget>[
-          IconButton(
-            tooltip: 'Inviter au salon',
-            onPressed: () {},
-            icon: Icon(Icons.share_outlined),
-          ),
-        ],
       ),
       body: Column(
         children: <Widget>[
@@ -130,6 +135,9 @@ class _ChannelScreenState extends State<ChannelScreen> {
                           (context, index) => MessageWidget(
                             message: _messages[index],
                             messages: _messages,
+                            isSentByMe:
+                                _currentAccountId != null &&
+                                _messages[index].authorId == _currentAccountId!,
                           ),
                     );
                   }
