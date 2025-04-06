@@ -27,9 +27,8 @@ class AccountModal extends StatelessWidget {
                   children: [
                     _listItem(
                       '${snapshot.data!.getString("account_username")}',
-                      subtitle: 'Mon profil',
+                      subtitle: 'Connecté',
                       Icons.account_circle_outlined,
-                      onTap: () {},
                       context: context, // Pass context to _listItem
                     ),
                     _listItem(
@@ -38,7 +37,9 @@ class AccountModal extends StatelessWidget {
                       onTap: () async {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => SettingsScreen()),
+                          MaterialPageRoute(
+                            builder: (context) => SettingsScreen(),
+                          ),
                         );
                       },
                       context: context, // Pass context to _listItem
@@ -53,7 +54,7 @@ class AccountModal extends StatelessWidget {
                           MaterialPageRoute(
                             builder: (context) => const WelcomeScreen(),
                           ),
-                              (route) => false,
+                          (route) => false,
                         );
                       },
                       context: context, // Pass context to _listItem
@@ -100,27 +101,30 @@ class AccountModal extends StatelessWidget {
   }
 
   ListTile _listItem(
-      String title,
-      IconData icon, {
-        required Function() onTap,
-        String? subtitle,
-        required BuildContext context, // Add context parameter
-      }) {
+    String title,
+    IconData icon, {
+    Function()? onTap,
+    String? subtitle,
+    required BuildContext context, // Add context parameter
+  }) {
     return ListTile(
       contentPadding: const EdgeInsets.only(left: 32, right: 32),
       leading: Icon(icon),
       title: Text(title),
       onTap: onTap,
-      subtitle: subtitle != null
-          ? Text(
-        subtitle,
-        style: TextStyle(
-          color: Theme.of(context).brightness == Brightness.dark
-              ? Colors.white70// Change subtitle color to white in dark mode
-              : null, // Default color for light mode (inherits from theme)
-        ),
-      )
-          : null,
+      subtitle:
+          subtitle != null
+              ? Text(
+                subtitle,
+                style: TextStyle(
+                  color:
+                      Theme.of(context).brightness == Brightness.dark
+                          ? Colors
+                              .white70 // Change subtitle color to white in dark mode
+                          : null, // Default color for light mode (inherits from theme)
+                ),
+              )
+              : null,
     );
   }
 }
