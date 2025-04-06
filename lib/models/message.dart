@@ -78,9 +78,10 @@ class Message {
   }
 
   static Future<Message> create(int channelId, String content) async {
-    final response = await Api.post('/channels/$channelId/messages', {
-      'content': content,
-    });
+    final response = await Api.post(
+      '/channels/$channelId/messages',
+      body: {'content': content},
+    );
 
     if (response.statusCode == 200) {
       final jsonResponse = jsonDecode(response.body);

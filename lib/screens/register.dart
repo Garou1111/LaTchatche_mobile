@@ -143,12 +143,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
       });
       return;
     }
-    final response = await Api.post('/register', {
-      'username': _usernameController.text,
-      'password': _passwordController.text,
-    }, authed: false);
-
-    print(response.body);
+    final response = await Api.post(
+      '/register',
+      body: {
+        'username': _usernameController.text,
+        'password': _passwordController.text,
+      },
+      authed: false,
+    );
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);

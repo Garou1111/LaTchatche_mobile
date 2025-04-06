@@ -12,6 +12,7 @@ class Channel {
   String ownerUsername;
   int memberCount;
   int messageCount;
+  bool isMember;
 
   Channel({
     required this.id,
@@ -22,6 +23,7 @@ class Channel {
     required this.ownerUsername,
     required this.memberCount,
     required this.messageCount,
+    this.isMember = false,
   });
 
   factory Channel.fromJson(Map<String, dynamic> json) {
@@ -35,6 +37,7 @@ class Channel {
         'owner_username': String ownerUsername,
         'member_count': int memberCount,
         'message_count': int messageCount,
+        'is_member': bool? isMember,
       } =>
         Channel(
           id: id,
@@ -47,6 +50,7 @@ class Channel {
           ownerUsername: ownerUsername,
           memberCount: memberCount,
           messageCount: messageCount,
+          isMember: isMember ?? false,
         ),
       _ => throw const FormatException('Failed to load channels'),
     };
@@ -85,17 +89,25 @@ class Channel {
     }
   }
 
-  static Future<Channel> createChannel({ required String name }) async {
-    final response = await Api.post('/channels', {
-      'name': name,
-      'type': 'public',
-    });
+  static Future<Channel> createChannel({required String name}) async {
+    final response = await Api.post(
+      '/channels',
+      body: {'name': name, 'type': 'public'},
+    );
 
     if (response.statusCode == 200) {
       Map<String, dynamic> jsonResponse = jsonDecode(response.body);
       return Channel.fromJson(jsonResponse);
     } else {
       throw Exception('Failed to create channel');
+    }
+  }
+
+  static Future<void> joinChannel(int channelId) async {
+    final response = await Api.post('/channels/$channelId/join');
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to join channel');
     }
   }
 }

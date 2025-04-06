@@ -107,10 +107,14 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _login() async {
-    final response = await Api.post('/login', {
-      'username': _usernameController.text,
-      'password': _passwordController.text,
-    }, authed: false);
+    final response = await Api.post(
+      '/login',
+      body: {
+        'username': _usernameController.text,
+        'password': _passwordController.text,
+      },
+      authed: false,
+    );
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);

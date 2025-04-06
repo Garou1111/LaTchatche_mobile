@@ -64,8 +64,8 @@ class Api {
 
   // Requête POST pour envoyer des données
   static Future<http.Response> post(
-    String resource,
-    Map<String, dynamic> body, {
+    String resource, {
+    Map<String, dynamic>? body,
     bool authed = true,
     bool loginRedirect = true,
   }) async {
