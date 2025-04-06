@@ -50,7 +50,7 @@ class Channel {
           ownerUsername: ownerUsername,
           memberCount: memberCount,
           messageCount: messageCount,
-          isMember: isMember ?? false,
+          isMember: isMember ?? true,
         ),
       _ => throw const FormatException('Failed to load channels'),
     };
