@@ -35,6 +35,8 @@ class MainApp extends StatelessWidget {
       builder: (context, themeProvider, child) {
         return MaterialApp(
           title: 'La Tchatche',
+          theme: ThemeData.light(),
+          darkTheme: ThemeData.dark(),
           themeMode:
               themeProvider.themeMode, // Use themeMode from ThemeProvider
           home: FutureBuilder(
